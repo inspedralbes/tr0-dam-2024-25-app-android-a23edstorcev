@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +8,11 @@ plugins {
 android {
     namespace = "com.example.p0"
     compileSdk = 34
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
 
     defaultConfig {
         applicationId = "com.example.p0"
@@ -50,9 +57,10 @@ android {
 }
 
 dependencies {
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.kotlin.stdlib) // O la versión que estés usando
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.gson)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
