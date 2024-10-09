@@ -1,47 +1,36 @@
 package com.example.p0
-
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.p0.ui.theme.P0Theme
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            P0Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+        setContentView(R.layout.activity_main)
+
+        // Llamada a la API
+        val call = RetrofitInstance.api.getUsuarios()
+
+        call.enqueue(object : Callback<List<Usuario>> {
+            override fun onResponse(call: Call<List<Usuario>>, response: Response<List<Usuario>>) {
+                if (response.isSuccessful) {
+                    val usuarios = response.body()
+                    usuarios?.forEach {
+                        Log.d("Usuario", "ID: ${it.id}, Nombre: ${it.nombre}, Email: ${it.email}")
+                    }
+                } else {
+                    Log.e("Error", "Error en la respuesta del servidor")
                 }
             }
-        }
+
+            override fun onFailure(call: Call<List<Usuario>>, t: Throwable) {
+                Log.e("Error", "Error al conectar con el servidor: ${t.message}")
+            }
+        })
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    P0Theme {
-        Greeting("Android")
-    }
-}
