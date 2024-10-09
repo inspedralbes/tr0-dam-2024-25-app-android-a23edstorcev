@@ -4,7 +4,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
-    private const val BASE_URL = "http://tu-ip-o-dominio:3000"  // Cambia esto por la URL de tu servidor Node.js
+    private const val BASE_URL = "http://132.226.192.137:3000"  // Cambia esto por la URL de tu servidor Node.js
 
     val api: ApiService by lazy {
         Retrofit.Builder()

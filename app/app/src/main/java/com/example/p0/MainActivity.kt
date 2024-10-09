@@ -13,21 +13,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Llamada a la API
-        val call = RetrofitInstance.api.getUsuarios()
+        val call = RetrofitInstance.api.getQuestions()
 
-        call.enqueue(object : Callback<List<Usuario>> {
-            override fun onResponse(call: Call<List<Usuario>>, response: Response<List<Usuario>>) {
+        call.enqueue(object : Callback<List<Question>> {
+            override fun onResponse(call: Call<List<Question>>, response: Response<List<Question>>) {
                 if (response.isSuccessful) {
                     val usuarios = response.body()
                     usuarios?.forEach {
-                        Log.d("Usuario", "ID: ${it.id}, Nombre: ${it.nombre}, Email: ${it.email}")
+                        Log.d("Usuario", "ID: ${it.id}, Nombre: ${it.pregunta}, Email: ${it.resposta}")
                     }
                 } else {
                     Log.e("Error", "Error en la respuesta del servidor")
                 }
             }
 
-            override fun onFailure(call: Call<List<Usuario>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Question>>, t: Throwable) {
                 Log.e("Error", "Error al conectar con el servidor: ${t.message}")
             }
         })
