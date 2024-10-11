@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Aquí va la pregunta"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- ImageView para mostrar la imagen relacionada -->
+    <ImageView
+        android:id="@+id/imageViewQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Imagen de la pregunta"/>
+
+    <!-- TextView para el temporizador -->
+    <TextView
+        android:id="@+id/textViewTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:30"
+        android:textSize="16sp"
+        android:textColor="#FF0000"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Botones para las respuestas -->
+    <Button
+        android:id="@+id/buttonAnswer1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Respuesta 1"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/buttonAnswer2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Respuesta 2"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/buttonAnswer3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Respuesta 3"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/buttonAnswer4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Respuesta 4"/>
+
+</LinearLayout>
