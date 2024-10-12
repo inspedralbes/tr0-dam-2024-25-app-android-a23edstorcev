@@ -17,37 +17,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.pepe1.ObjQuestionarios.Question
 import com.example.pepe1.ObjQuestionarios.QuestionResponse
-import com.example.pepe1.Red.RetrofitClient
 import com.example.pepe1.Red.RetrofitClient.instance
 import com.example.pepe1.ui.theme.Pepe1Theme
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
 
 class QuestionActivity : ComponentActivity() {
     private lateinit var preguntas: List<Question>
     private var currentQuestionIndex: Int = 0
     private var correctAnswersCount: Int = 0
 
-    // HashMap para almacenar las estadísticas de las preguntas
     private val preguntasStats: MutableMap<String, MutableMap<String, Int>> = mutableMapOf()
+
+    // Variables para el contador de tiempo
+    private var startTime: Long = 0
+    private var totalTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Llama a obtenerPreguntas
+        startTime = System.currentTimeMillis() // Captura el tiempo al inicio del cuestionario
         obtenerPreguntas()
     }
 
     private fun obtenerPreguntas() {
-        instance.getQuestions().enqueue(object : Callback<QuestionResponse> { // Cambiar a QuestionResponse
+        instance.getQuestions().enqueue(object : Callback<QuestionResponse> {
             override fun onResponse(call: Call<QuestionResponse>, response: Response<QuestionResponse>) {
                 if (response.isSuccessful) {
-                    val questionResponse = response.body() // Obtener el objeto directamente
-                    if (questionResponse != null) {
-                        preguntas = questionResponse.preguntes // Asigna la lista de preguntas
+                    val questionsList = response.body()
+                    if (questionsList != null) {
+                        preguntas = questionsList.preguntes
                         Log.d("Response", "Cuerpo de la respuesta: ${preguntas.toString()}")
                         mostrarPreguntaActual()
                     } else {
@@ -63,7 +63,6 @@ class QuestionActivity : ComponentActivity() {
             }
         })
     }
-
 
     private fun mostrarError(mensaje: String) {
         setContent {
@@ -97,14 +96,15 @@ class QuestionActivity : ComponentActivity() {
             modifier = modifier,
             factory = { context ->
                 LayoutInflater.from(context).inflate(R.layout.question_activity, null).apply {
-                    val textViewQuestion = findViewById<TextView>(R.id.textViewQuestion)
                     val imageViewQuestion = findViewById<ImageView>(R.id.imageViewQuestion)
                     val buttonAnswer1 = findViewById<Button>(R.id.buttonAnswer1)
                     val buttonAnswer2 = findViewById<Button>(R.id.buttonAnswer2)
                     val buttonAnswer3 = findViewById<Button>(R.id.buttonAnswer3)
                     val buttonAnswer4 = findViewById<Button>(R.id.buttonAnswer4)
+                    val textViewQuestion = findViewById<TextView>(R.id.textViewQuestion)
 
-                    if (currentQuestionIndex < preguntas.size) {
+                    // Función para actualizar el contenido de la pregunta en la vista
+                    fun actualizarPregunta() {
                         val currentQuestion = preguntas[currentQuestionIndex]
                         textViewQuestion.text = currentQuestion.pregunta
 
@@ -118,12 +118,16 @@ class QuestionActivity : ComponentActivity() {
                             buttonAnswer3.text = currentQuestion.respostes[2]
                             buttonAnswer4.text = currentQuestion.respostes[3]
                         }
-
-                        buttonAnswer1.setOnClickListener { responder(0) }
-                        buttonAnswer2.setOnClickListener { responder(1) }
-                        buttonAnswer3.setOnClickListener { responder(2) }
-                        buttonAnswer4.setOnClickListener { responder(3) }
                     }
+
+                    // Mostrar la primera pregunta al inicio
+                    actualizarPregunta()
+
+                    // Configurar los botones para responder y actualizar la vista
+                    buttonAnswer1.setOnClickListener { responder(0); actualizarPregunta() }
+                    buttonAnswer2.setOnClickListener { responder(1); actualizarPregunta() }
+                    buttonAnswer3.setOnClickListener { responder(2); actualizarPregunta() }
+                    buttonAnswer4.setOnClickListener { responder(3); actualizarPregunta() }
                 }
             }
         )
@@ -141,22 +145,21 @@ class QuestionActivity : ComponentActivity() {
             stats["incorrectas"] = stats["incorrectas"]!! + 1
         }
 
-        // Incrementar el índice de la pregunta actual
         currentQuestionIndex++
 
-        // Verifica si hay más preguntas
         if (currentQuestionIndex < preguntas.size) {
-            mostrarPreguntaActual()
+            // Actualizar la vista para mostrar la nueva pregunta
         } else {
+            totalTime = System.currentTimeMillis() - startTime // Calcula el tiempo total
             mostrarResultados()
         }
     }
-
 
     private fun mostrarResultados() {
         val intent = Intent(this, ResultActivity::class.java).apply {
             putExtra("correctes", correctAnswersCount)
             putExtra("total", preguntas.size)
+            putExtra("tiempo_total", totalTime) // Pasa el tiempo total a ResultActivity
         }
         startActivity(intent)
         finish()

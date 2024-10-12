@@ -1,35 +1,40 @@
 package com.example.pepe1
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import com.example.pepe1.ui.theme.Pepe1Theme
 
 class ResultActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            val score = intent.getIntExtra("score", 0)
-            ResultScreen(score)
-        }
-    }
+        setContentView(R.layout.activity_result)
 
-    @Composable
-    fun ResultScreen(score: Int) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = "Tu puntuación: $score")
-            // Aquí puedes agregar más información sobre las respuestas correctas
+        val correctAnswers = intent.getIntExtra("correctes", 0)
+        val totalQuestions = intent.getIntExtra("total", 0)
+        val totalTime = intent.getLongExtra("tiempo_total", 0) // Obtiene el tiempo total
+
+        // Convertir milisegundos a segundos
+        val totalTimeInSeconds = totalTime / 1000
+
+        // Configurar los TextViews
+        val textViewCorrectAnswers = findViewById<TextView>(R.id.textViewCorrectAnswers)
+        val textViewTotalTime = findViewById<TextView>(R.id.textViewTotalTime)
+        val buttonFinish = findViewById<Button>(R.id.buttonFinish)
+
+        textViewCorrectAnswers.text = "Correctas: $correctAnswers/$totalQuestions"
+        textViewTotalTime.text = "Tiempo total: $totalTimeInSeconds segundos"
+
+        buttonFinish.setOnClickListener {
+            finish() // Finaliza la actividad y regresa a la anterior
         }
     }
 }

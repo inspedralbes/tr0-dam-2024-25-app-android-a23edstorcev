@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">pepe1</string>
+    <string name="question_text">Aquí va la pregunta</string>
+    <string name="timer_text">00:30</string>
+    <string name="answer_1">Respuesta 1</string>
+    <string name="answer_2">Respuesta 2</string>
+    <string name="answer_3">Respuesta 3</string>
+    <string name="answer_4">Respuesta 4</string>
 </resources>
