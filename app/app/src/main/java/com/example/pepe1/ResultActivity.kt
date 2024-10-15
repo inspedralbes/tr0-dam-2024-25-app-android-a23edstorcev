@@ -22,10 +22,8 @@ class ResultActivity : ComponentActivity() {
         val totalQuestions = intent.getIntExtra("total", 0)
         val totalTime = intent.getLongExtra("tiempo_total", 0) // Obtiene el tiempo total
 
-        // Convertir milisegundos a segundos
         val totalTimeInSeconds = totalTime / 1000
 
-        // Configurar los TextViews
         val textViewCorrectAnswers = findViewById<TextView>(R.id.textViewCorrectAnswers)
         val textViewTotalTime = findViewById<TextView>(R.id.textViewTotalTime)
         val buttonFinish = findViewById<Button>(R.id.buttonFinish)
@@ -34,7 +32,7 @@ class ResultActivity : ComponentActivity() {
         textViewTotalTime.text = "Tiempo total: $totalTimeInSeconds segundos"
 
         buttonFinish.setOnClickListener {
-            finish() // Finaliza la actividad y regresa a la anterior
+            finish()
         }
     }
 }
